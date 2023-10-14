@@ -11,10 +11,40 @@ set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_CXX_STANDARD 17)
 
 include(CheckCXXCompilerFlag)
+include(CheckCXXSourceRuns)
 
 set(RAISR_VERSION_MAJOR           "22")
 set(RAISR_VERSION_MINOR           "12")
 configure_file(Library/RaisrVersion.h.in Library/RaisrVersion.h @ONLY)
+
+if(MSVC)
+    set(AVX512F_FLAGS "/arch:AVX512")
+else()
+    set(AVX512F_FLAGS "-mavx512f") # generic flag for gcc, clang, icc
+endif()
+
+set(CMAKE_REQUIRED_FLAGS_OLD ${CMAKE_REQUIRED_FLAGS})
+set(CMAKE_REQUIRED_FLAGS ${AVX512F_FLAGS})
+check_cxx_source_runs("
+    #include <immintrin.h>
+    int main() {
+        float data[16] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
+        float output[16];
+        __m512 a = _mm512_loadu_ps(data); // avx512f
+        __m512 b = _mm512_loadu_ps(data);
+        __mmask8 mask = _mm512_cmp_ps_mask(a, b, _CMP_EQ_OQ); // avx512vl
+        (void)mask;
+        __m512 c = _mm512_add_ps(a, b); // avx512f
+        _mm512_storeu_ps(output, c); // avx512f
+        return 0;
+    }" HAVE_AVX512)
+set(CMAKE_REQUIRED_FLAGS ${CMAKE_REQUIRED_FLAGS_OLD})
+if(HAVE_AVX512)
+    message(STATUS "Building with AVX512")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${AVX512F_FLAGS}")
+else()
+    message(STATUS "Building without AVX512")
+endif()
 
 if( UNIX )
 
@@ -30,21 +60,6 @@ else()
     message(STATUS "Building with Atan Approximation")
     list(APPEND flags_to_test "-DUSE_ATAN2_APPROX")
 endif()
-
-INCLUDE(CheckCXXSourceRuns)
-SET(CMAKE_REQUIRED_FLAGS "-march=native")
-check_cxx_source_runs("
-    #include <immintrin.h>
-    int main(int argc, char** argv) {
-        float data[16] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
-        float output[16];
-        __m512 a = _mm512_loadu_ps(data); // avx512f
-        __m512 b = _mm512_loadu_ps(data);
-        __mmask8 mask = _mm512_cmp_ps_mask(a, b, _CMP_EQ_OQ); // avx512vl
-        __m512 c = _mm512_add_ps(a, b); // avx512f
-        _mm512_storeu_ps(output, c); // avx512f
-        return 0;
-    }" HAVE_AVX512)
 
 foreach(cflag ${flags_to_test})
     string(REGEX REPLACE "[^A-Za-z0-9]" "_" cflag_var "${cflag}")
