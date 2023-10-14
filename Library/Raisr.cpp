@@ -1436,7 +1436,7 @@ RNLERRORTYPE RNLSetRes(VideoDataType *inY, VideoDataType *inCr, VideoDataType *i
 
             // Filter initialization for Y channel segment
 
-            IppiSize srcSize = {(int)inY->width, segHeight / gRatio};
+            IppiSize srcSize = {(int)inY->width, static_cast<int>(segHeight / gRatio)};
             IppiSize dstSize = {(int)outY->width, segHeight};
             status = ippInit(srcSize, inY->step, dstSize, outY->step, &gIppCtx.specY[threadIdx], &gIppCtx.pbufferY[threadIdx]);
             if (status != ippStsNoErr)
