@@ -8,6 +8,7 @@ endif()
 
 
 set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_CXX_STANDARD 17)
 
 include(CheckCXXCompilerFlag)
 
@@ -20,7 +21,6 @@ if( UNIX )
 set(flags_to_test
     -march=native
     -O3
-    -std=c++17
     -DNDEBUG
     -ffast-math
     -Wno-narrowing
