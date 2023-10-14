@@ -13,7 +13,7 @@ include(CheckCXXCompilerFlag)
 
 set(RAISR_VERSION_MAJOR           "22")
 set(RAISR_VERSION_MINOR           "12")
-configure_file(${PROJECT_SOURCE_DIR}/Library/RaisrVersion.h.in ${PROJECT_SOURCE_DIR}/Library/RaisrVersion.h @ONLY)
+configure_file(Library/RaisrVersion.h.in Library/RaisrVersion.h @ONLY)
 
 if( UNIX )
 
@@ -66,5 +66,5 @@ endif(UNIX)
 add_subdirectory(Library)
 
 # Raisr Sample app
-include_directories(${PROJECT_SOURCE_DIR}/Library/)
+include_directories(Library/)
 
