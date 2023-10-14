@@ -9,8 +9,6 @@ endif()
 
 set(CMAKE_BUILD_TYPE Release)
 
-#COMPILE_AS_CPP
-enable_language(CXX)
 include(CheckCXXCompilerFlag)
 
 set(RAISR_VERSION_MAJOR           "22")
