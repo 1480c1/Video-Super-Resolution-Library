@@ -133,7 +133,7 @@ enum class CHANNEL
  *   global variables
  ************************************************************/
 // IPP context
-ippContext gIppCtx;
+inline ippContext gIppCtx;
 
 // Quantization values
 static unsigned int gQuantizationAngle;
@@ -149,22 +149,22 @@ static unsigned int gResizeExpand; // Segment is expanded by gLoopMargin so that
 static unsigned int g64AlinedgPatchAreaSize;
 
 // vectors to hold trained data
-std::vector<float> gQStr;
-std::vector<float> gQCoh;
-std::vector<std::vector<float *>> gFilterBuckets;
-std::vector<float> gQStr2;
-std::vector<float> gQCoh2;
-std::vector<std::vector<float *>> gFilterBuckets2;
+inline std::vector<float> gQStr;
+inline std::vector<float> gQCoh;
+inline std::vector<std::vector<float *>> gFilterBuckets;
+inline std::vector<float> gQStr2;
+inline std::vector<float> gQCoh2;
+inline std::vector<std::vector<float *>> gFilterBuckets2;
 
 // contiguous memory to hold all filters
-float *gFilterBuffer;
-float *gFilterBuffer2;
-VideoDataType *gIntermediateY; // Buffer to hold intermediate result for two pass
-volatile int threadStatus[120];
+inline float *gFilterBuffer;
+inline float  *gFilterBuffer2;
+inline VideoDataType *gIntermediateY; // Buffer to hold intermediate result for two pass
+inline volatile int threadStatus[120];
 
 // threading related used in patch-based approach
 static int gThreadCount = 0;
-ThreadPool *gPool = nullptr;
+inline ThreadPool *gPool = nullptr;
 
 // pointer to gaussian filter allocated dynamiclly
 static float *gPGaussian = nullptr;
