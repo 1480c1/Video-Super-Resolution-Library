@@ -19,10 +19,6 @@ configure_file(Library/RaisrVersion.h.in Library/RaisrVersion.h @ONLY)
 if( UNIX )
 
 set(flags_to_test
-    -march=native
-    -O3
-    -DNDEBUG
-    -ffast-math
     -Wno-narrowing
     -fPIC
 )
